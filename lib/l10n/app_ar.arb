@@ -1,0 +1,7 @@
+{
+    "helloWorld": "مرحباً بالعالم!",
+    "@helloWorld": {
+        "description": "The default greeting text"
+    },
+    "userListTitle": "قائمة المستخدمين"
+}

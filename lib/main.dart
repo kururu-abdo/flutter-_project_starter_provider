@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_template_provider/di.dart';
+import 'package:flutter_template_provider/l10n/app_localizations.dart';
+import 'package:flutter_template_provider/presentation/viewmodels/locale_viewmodel.dart';
+import 'package:flutter_template_provider/theme/app_theme.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main()async {
+   WidgetsFlutterBinding.ensureInitialized();
+  final providers = await setupProviders();
+  runApp(
+    MultiProvider(
+      providers: providers,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -10,27 +23,32 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+     return MaterialApp(
+      title: 'Flutter Template',
+      theme: AppTheme.lightTheme(context),
+            locale: Provider.of<LocaleViewModel>(context).currentLocale, // Set the locale here
+      localizationsDelegates: const [
+        AppLocalizations.delegate, // Provides localized strings
+        GlobalMaterialLocalizations.delegate, // Provides other localizations of Material components
+        GlobalWidgetsLocalizations.delegate, // Provides localizations for basic widgets like Directionality
+        GlobalCupertinoLocalizations.delegate, // Provides localizations for Cupertino (iOS-style) widgets
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('ar'), // Arabic
+        // Add other locales you want to support
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode &&
+              supportedLocale.countryCode == locale?.countryCode) {
+            return supportedLocale;
+          }
+        }
+        // If the locale of the device is not supported, use the first one
+        return supportedLocales.first;
+      },
+      home: MyHomePage(title: 'title')
     );
   }
 }

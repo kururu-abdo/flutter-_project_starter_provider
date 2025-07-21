@@ -1,0 +1,7 @@
+{
+    "helloWorld": "Hello World!",
+    "@helloWorld": {
+        "description": "The default greeting text"
+    },
+    "userListTitle": "User List"
+}
